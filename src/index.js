@@ -1,23 +1,6 @@
-const express = require("express")
-const  User = require("./models/user")
-const {Task} = require("./models/task")
-const { ObjectId } = require("mongodb")
-const userRouter = require("./routers/user")
-const taskRouter = require("./routers/task")
-const bcrypt = require("bcryptjs");
 
-require("./db/mongoose")
-
-const app = express()
+const app = require("./app")
 const port = process.env.PORT 
-const jwt  = require('jsonwebtoken')
-
-
-
-app.use(express.json())
-app.use(userRouter)  // register userRouter
-app.use(taskRouter)  // register taskRouter
-
 
 
 app.listen(port , () => {
@@ -26,6 +9,7 @@ app.listen(port , () => {
 
 
 
+/*
 const main  = async () => {
     //  const task =  await Task.findById('650e1861fb635b288c0dbcc7').populate("owner") ;
     //  console.log(task);
@@ -38,3 +22,4 @@ const main  = async () => {
 
 
 main()
+*/

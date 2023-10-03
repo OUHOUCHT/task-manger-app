@@ -2,9 +2,8 @@
 
 const  sendGrid =   require("@sendgrid/mail")
 
-const ApiKey = "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"
 
-sendGrid.setApiKey(ApiKey)
+sendGrid.setApiKey(process.env.APIKEY)
 
 
 const sendEmailToUser =  (email,name) => {
@@ -15,10 +14,10 @@ const sendEmailToUser =  (email,name) => {
         subject : 'Thanks for join in' ,
         text : `Welcom to the app ,  ${name} let me know to you get along from app` ,
     }).then(() => {
-        console.log('Email sent')
+        console.log('FROM SENDGRID :  Email sent')
     })
     .catch((error) => {
-        console.error(error)
+        console.error("FROM SENDGRID : " + error)
     })
 
 }

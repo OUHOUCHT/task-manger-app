@@ -37,9 +37,8 @@ router.post('/users', async (req,res) => {
 
 
            await me.save() ;
-           sendEmailToUser(me.email, me.name)
+            sendEmailToUser(me.email, me.name)
            const token =  await me.generateAuthToken()
-
            res.status(200).send({token ,me})
             
         } catch (error) {
