@@ -13,6 +13,7 @@ const { sendEmailToUser, sendCancelationEmailUser } = require("../emails/account
 router.post('/users', async (req,res) => {
 
     const me = new User( req.body);
+
     
    
     // const error = me.validateSync() ;
@@ -37,7 +38,7 @@ router.post('/users', async (req,res) => {
 
 
            await me.save() ;
-            sendEmailToUser(me.email, me.name)
+          //  sendEmailToUser(me.email, me.name)
            const token =  await me.generateAuthToken()
            res.status(200).send({token ,me})
             
@@ -52,16 +53,17 @@ router.post('/users', async (req,res) => {
 
 router.post('/users/login', async (req, res) => {
     try {
+
+
         
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token =  await user.generateAuthToken()
 
         
-         res.send({  user  , token})
+         res.status(200).send({  user  , token})
 
        /*  const userJson =user.toObject();    // using toObject in user model
          res.send({  user : userJson  , token}) */
-
 
 
     } catch (e) {
@@ -87,7 +89,7 @@ router.get('/users/me', auth ,async (req,res) => {
         res.status(200).send(req.user)
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).send(error.message)
 
     }
 
@@ -212,12 +214,12 @@ router.delete('/users/me',auth,async (req,res) => {
 
     try {
         const response =  await User.findOneAndRemove( { _id : req.user._id});
-        sendCancelationEmailUser(response.email, response.name)
+       // sendCancelationEmailUser(response.email, response.name)
 
         if(!response){
             return res.status(400).send(404)
         }
-        res.status(404).send(response)
+        res.status(200).send(response)
 
         
     } catch (error) {
@@ -271,15 +273,14 @@ const upload = multer ({
 // his route right here would be used for creating an avatar and for updating it.
 router.post('/users/me/avatar' ,auth , upload.single("avatar") ,async(req,res) =>{
 
-
+  
    // req.user.avatar = req.file.buffer;
     const buffer = await sharp(req.file.buffer).resize({ height : 300, width: 300}).png().toBuffer();
-    req.user.avatar = buffer
     await req.user.save()
     res.status(200).send("profile image")
     
 },(error,req,res,next) => {
-    res.status(400).send({ERROR : error.message})
+    res.status(400).send({"ERROR" : error.message})
 });
 
 

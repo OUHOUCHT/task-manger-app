@@ -34,7 +34,7 @@ router.post('/tasks' ,auth,async (req,res)=> {
            res.status(200).send(task)
             
         } catch (error) {
-            res.status(400).send(error)
+            res.status(401).send(error)
 
         }
 
@@ -46,12 +46,13 @@ router.post('/tasks' ,auth,async (req,res)=> {
 
 
 
-
+    // pagination
 // GET /tasks?completed=true
 // GET  /tasks?limit=2&skip=0
 // GET  /tasks?sortBy=createdAt:desc
 
 router.get('/tasks' ,auth,async (req,res) => {
+    console.log("/tasks")
 
     const match = {};
     const sort = { }
@@ -68,7 +69,6 @@ router.get('/tasks' ,auth,async (req,res) => {
     }
 
 
-    console.log(sort )
 
     /*
     Task.find({}).select('description').then((data) =>{
@@ -106,8 +106,9 @@ router.get('/tasks' ,auth,async (req,res) => {
 
 router.get("/tasks/:id" ,auth,async (req,res) => {
 
-
     const id = req.params.id;
+
+    console.log("_id :"+id , "owner :" + req.user._id)
 
     try {
         const data = await Task.findOne({_id : id , owner : req.user._id}).populate({
@@ -207,13 +208,13 @@ router.delete('/tasks/:id',auth,async (req,res) => {
         const response =  await Task.findOneAndDelete( { _id : id , owner : req.user._id}).populate('owner')
         
         if(!response){
-            return res.status(400).send(404)
+            return res.status(400).send(400)
         }
-        res.status(404).send(response)
+        res.status(200).send(response)
 
         
     } catch (error) {
-        res.status(400).send(error+'')
+        res.status(500).send(error+'')
 
     }
 

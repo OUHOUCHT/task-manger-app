@@ -24,7 +24,7 @@ const  userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        lowercase : true,
+      //  lowercase : true,
     },
     email: {
         type: String,
@@ -127,7 +127,6 @@ userSchema.pre('findOneAndRemove', { query: true }, async function() {
 userSchema.pre('save', async function (next) {
 
     if (this.isModified('password')) {
-        console.log(this.isModified('password'))
         this.password = await bcrypt.hash(this.password, 10)
     }
 
